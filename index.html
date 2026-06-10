@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AuraSenior - Inicio</title>
+    <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@400;500;600;700&family=Sniglet:wght@400;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/src/aurasenior.css">
+    <script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
+</head>
+<body>
+    <div id="landing-page" class="landing-page">
+        <div class="landing-content">
+            <div class="landing-text">
+                <div class="cloud-title landing-title">
+                    <h1>☁️ AuraSenior ☁️</h1>
+                </div>
+                <p class="landing-welcome">¡Bienvenido a tu espacio de bienestar y diversión!</p>
+                <p class="landing-description">Aquí encontrarás actividades para mantener tu mente activa, juegos entretenidos y todo lo que necesitas para disfrutar cada día.</p>
+                <button class="start-btn" id="start-btn">¡Comenzemos!</button>
+            </div>
+            <div class="landing-mascot">
+                <div class="mascot-body" style="width: 250px; height: 250px; position: relative; animation: mascot-idle 2s ease-in-out infinite;">
+                    <div class="spikes" style="position: absolute; width: 100%; height: 100%;" id="spikes-landing"></div>
+                    <div class="mascot-eye" style="width: 90px; height: 90px; background: #ffffff; border-radius: 50%; position: absolute; top: 60px; left: 30px; display: flex; align-items: center; justify-content: center;">
+                        <div class="pupil" style="width: 35px; height: 35px; background: #000000; border-radius: 50%;"></div>
+                    </div>
+                    <div class="mascot-eye" style="width: 90px; height: 90px; background: #ffffff; border-radius: 50%; position: absolute; top: 60px; right: 30px; display: flex; align-items: center; justify-content: center;">
+                        <div class="pupil" style="width: 35px; height: 35px; background: #000000; border-radius: 50%;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="mascot-container" id="mascot" style="display: none;">
+        <div class="mascot-body">
+            <div class="spikes" id="spikes"></div>
+            <div class="mascot-eye left">
+                <div class="pupil"></div>
+            </div>
+            <div class="mascot-eye right">
+                <div class="pupil"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container" id="main-container" style="display: none;">
+        <div class="cloud-title">
+            <h1>☁️ AuraSenior ☁️</h1>
+        </div>
+
+        <div class="nav-tabs">
+            <button class="tab-btn active" data-tab="registro">Registro</button>
+            <button class="tab-btn" data-tab="lumi">Lumi</button>
+            <button class="tab-btn" data-tab="que-es">¿Qué es?</button>
+            <button class="tab-btn" data-tab="perdida-memoria">Pérdida de Memoria</button>
+            <button class="tab-btn" data-tab="creadores">Creadores</button>
+            <button class="tab-btn" data-tab="webar">Web-AR</button>
+            <button class="tab-btn" data-tab="actividades">Actividades</button>
+        </div>
+
+        <div id="registro" class="content-section active">
+            <div class="section-header">
+                <h2>Registro</h2>
+            </div>
+            
+            <form id="registration-form">
+                <p class="content-text" style="margin-bottom: 20px;">Regístrate para obtener tu Código QR personal. Con él podrás guardar y ver tus propios recuerdos en Realidad Aumentada.</p>
+                <div class="form-group">
+                    <label for="nombre">Nombres y Apellidos</label>
+                    <input type="text" id="nombre" placeholder="Escribe tu nombre completo">
+                </div>
+
+                <div class="form-group">
+                    <label>Edad</label>
+                    <div class="age-controls">
+                        <button type="button" class="age-btn" id="decrease-age">−</button>
+                        <input type="number" id="edad" class="age-input" value="65" min="18" max="120">
+                        <button type="button" class="age-btn" id="increase-age">+</button>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Género</label>
+                    <div class="gender-options">
+                        <button type="button" class="gender-btn" data-gender="masculino">
+                            <span class="icon">👨</span>
+                            Masculino
+                        </button>
+                        <button type="button" class="gender-btn" data-gender="femenino">
+                            <span class="icon">👩</span>
+                            Femenino
+                        </button>
+                        <button type="button" class="gender-btn" data-gender="otro">
+                            <span class="icon">🧑</span>
+                            Otro
+                        </button>
+                    </div>
+                </div>
+
+                <button type="submit" class="submit-btn" id="btn-submit-registro">Registrarse</button>
+            </form>
+
+            <div id="registration-success" style="display: none; text-align: center; margin-top: 20px;">
+                <h3 style="color: #4ade80; font-family: 'Sniglet', cursive; margin-bottom: 15px;">¡Registro Exitoso!</h3>
+                <p class="content-text">Este es tu Código QR. Guárdalo, imprímelo o tómale una foto. Lo necesitarás para entrar a la sección de Realidad Aumentada.</p>
+                <div id="reg-qr-code" style="margin: 20px auto; display: inline-block; padding: 15px; background: white; border-radius: 10px; border: 3px solid var(--blue-soft);"></div>
+                <h4 id="reg-user-info" style="color: var(--blue-dark); margin-bottom: 20px; font-family: 'Comfortaa', cursive;"></h4>
+                <button id="btn-download-qr" class="submit-btn" style="padding: 10px 20px; font-size: 1rem;">Guardar Imagen</button>
+                <button id="btn-reset-registro" class="submit-btn" style="padding: 10px 20px; font-size: 1rem; margin-left: 10px; background: var(--blue-soft); color: var(--blue-dark);">Registrar otra persona</button>
+            </div>
+        </div>
+
+        <div id="lumi" class="content-section">
+            <div class="section-header">
+                <h2>¡Hola! Soy Lumi 🌟</h2>
+                <button class="voice-btn" data-section="lumi">🔊</button>
+            </div>
+            <div style="display: flex; gap: 40px; align-items: center; flex-wrap: wrap; justify-content: center;">
+                <div style="flex: 0 0 auto;">
+                    <div class="mascot-body" style="width: 200px; height: 200px; position: relative; animation: mascot-idle 2s ease-in-out infinite;">
+                        <div class="spikes" style="position: absolute; width: 100%; height: 100%;" id="spikes-lumi"></div>
+                        <div class="mascot-eye" style="width: 70px; height: 70px; background: #ffffff; border-radius: 50%; position: absolute; top: 50px; left: 25px; display: flex; align-items: center; justify-content: center;">
+                            <div class="pupil" style="width: 28px; height: 28px; background: #000000; border-radius: 50%;"></div>
+                        </div>
+                        <div class="mascot-eye" style="width: 70px; height: 70px; background: #ffffff; border-radius: 50%; position: absolute; top: 50px; right: 25px; display: flex; align-items: center; justify-content: center;">
+                            <div class="pupil" style="width: 28px; height: 28px; background: #000000; border-radius: 50%;"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="content-text" id="text-lumi" style="flex: 1; min-width: 280px;">
+                    ¡Hola a todos! Me llamo Lumi y soy tu compañero de aventuras en AuraSenior. ¡Qué alegría conocerte! Soy aquí para ayudarte a disfrutar de todas las actividades y juegos que tenemos preparados para ti. Mi trabajo es hacer que tu experiencia sea divertida, fácil y agradable. Siempre estaré aquí para acompañarte, celebrar tus logros y hacer que cada día sea un poquito más feliz. ¡Vamos a disfrutar juntos de esta maravillosa experiencia!
+                </div>
+            </div>
+        </div>
+
+        <div id="que-es" class="content-section">
+            <div class="section-header">
+                <h2>¿Qué es AuraSenior?</h2>
+                <button class="voice-btn" data-section="que-es">🔊</button>
+            </div>
+            <div class="content-text" id="text-que-es">
+                AuraSenior es una plataforma diseñada especialmente para adultos mayores, enfocada en estimular la memoria, promover la actividad cognitiva y brindar herramientas accesibles para el bienestar mental. Nuestro objetivo es crear un espacio amigable, cálido y fácil de usar, donde cada persona pueda disfrutar de actividades que mantengan su mente activa y saludable. AuraSenior combina tecnología moderna con un diseño intuitivo, pensado para que la experiencia sea agradable y sin complicaciones.
+            </div>
+        </div>
+
+        <div id="perdida-memoria" class="content-section">
+            <div class="section-header">
+                <h2>Pérdida de Memoria</h2>
+                <button class="voice-btn" data-section="perdida-memoria">🔊</button>
+            </div>
+            <div class="content-text" id="text-perdida-memoria">
+                La pérdida de memoria es un cambio normal del envejecimiento, pero existen muchas formas de mantener la mente activa y saludable. Algunos consejos importantes incluyen: realizar ejercicio físico regularmente, mantener una dieta equilibrada rica en frutas y verduras, dormir lo suficiente, mantener contactos sociales, y realizar actividades que estimulen el cerebro como leer, hacer crucigramas o aprender algo nuevo. Es importante consultar con un profesional si notas cambios significativos en la memoria o la capacidad cognitiva.
+            </div>
+        </div>
+
+        <div id="creadores" class="content-section">
+            <div class="section-header">
+                <h2>Nuestro Equipo</h2>
+                <button class="voice-btn" data-section="creadores">🔊</button>
+            </div>
+            <div class="content-text" id="text-creadores">
+                AuraSenior fue desarrollado con dedicación por un equipo apasionado por la tecnología y el bienestar de los adultos mayores.
+            </div>
+            <div class="team-container">
+                <div class="team-member">
+                    <div class="avatar">
+                        <img src="julian.jpg" alt="Julian Rodriguez" onerror="this.style.display='none'; this.parentElement.innerHTML='👨‍💼';">
+                    </div>
+                    <h3>Julian Rodriguez</h3>
+                </div>
+                <div class="team-member">
+                    <div class="avatar">
+                        <img src="mariana.jpg" alt="Mariana Baracaldo" onerror="this.style.display='none'; this.parentElement.innerHTML='👩‍💼';">
+                    </div>
+                    <h3>Mariana Baracaldo</h3>
+                </div>
+                <div class="team-member">
+                    <div class="avatar">
+                        <img src="matias.jpg" alt="Matias Ñañez" onerror="this.style.display='none'; this.parentElement.innerHTML='🧑‍💼';">
+                    </div>
+                    <h3>Matias Ñañez</h3>
+                </div>
+            </div>
+        </div>
+
+        <div id="webar" class="content-section">
+            <div class="section-header">
+                <h2>Web-AR (Realidad Aumentada)</h2>
+                <button class="voice-btn" data-section="webar">🔊</button>
+            </div>
+            
+            <div id="ar-login-view">
+                <div class="content-text" id="text-webar" style="margin-bottom: 20px;">
+                    Para ver tus recuerdos personalizados en Realidad Aumentada, escanea tu Código QR. Si no tienes uno, ve a la pestaña "Registro" para crearlo.
+                </div>
+                <div style="text-align: center; margin-bottom: 20px;">
+                    <button id="btn-start-scanner" class="submit-btn" style="padding: 15px 30px; font-size: 1.2rem;">
+                        📷 Escanear mi Código QR
+                    </button>
+                </div>
+                <div id="qr-reader-container" style="display: none; max-width: 400px; margin: 0 auto; border: 3px solid var(--blue-soft); border-radius: 15px; overflow: hidden; padding: 10px; background: white;">
+                    <div id="qr-reader"></div>
+                    <div id="scanner-status" style="text-align: center; margin-top: 10px; font-weight: bold; color: var(--blue-dark);">Buscando cámara...</div>
+                    <button id="btn-cancel-scanner" class="submit-btn" style="width: 100%; margin-top: 10px; background: #ef4444; padding: 10px;">Cancelar Escaneo</button>
+                </div>
+            </div>
+
+            <div id="ar-start-view" style="display: none;">
+                <div class="content-text" style="margin-bottom: 20px; text-align: center;">
+                    <h3 id="ar-welcome-msg" style="color: var(--blue-dark); font-family: 'Sniglet', cursive; margin-bottom: 10px;">¡Bienvenido!</h3>
+                    Espacio dedicado para la visualización de Realidad Aumentada. Haz clic en el botón de abajo para acceder a tus experiencias interactivas y envolventes.
+                </div>
+                <div class="ar-placeholder">
+                    <div class="icon">📱✨</div>
+                    <p style="margin-bottom: 20px;">Explora tus Recuerdos en Realidad Aumentada aquí:</p>
+                    <button id="btn-start-ar" class="submit-btn">
+                        Ver en Realidad Aumentada
+                    </button>
+                </div>
+                <div style="text-align: center; margin-top: 20px;">
+                    <button id="btn-logout-ar" class="submit-btn" style="background: var(--blue-soft); color: var(--blue-dark); padding: 10px 20px; font-size: 1rem;">Cerrar Sesión QR</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="actividades" class="content-section">
+            <div class="section-header">
+                <h2>Actividades</h2>
+                <button class="voice-btn" data-section="actividades">🔊</button>
+            </div>
+            <div class="content-text" id="text-actividades">
+                Lista de juegos y actividades: Sudokus, Música, Sopas de letras (juego directo en la página), Crucigramas y Solitario. Haz clic en cada uno para jugar.
+            </div>
+            <ul class="activity-list">
+                <li class="activity-item" id="sudoku-toggle" style="cursor: pointer;">
+                    🧩 Sudokus (haz clic aquí para jugar)
+                </li>
+                <li class="activity-item">
+                    <a href="https://www.youtube.com/playlist?list=PL6L8FD25E0648A75F" target="_blank" style="color: var(--blue-dark); text-decoration: none; display: block;">
+                        🎵 Música (Clásicos)
+                    </a>
+                </li>
+                <li class="activity-item" id="word-search-toggle" style="cursor: pointer;">
+                    📝 Sopas de letras (haz clic aquí para jugar)
+                </li>
+                <li class="activity-item" id="crossword-toggle" style="cursor: pointer;">
+                    ✏️ Crucigramas (haz clic aquí para jugar)
+                </li>
+                <li class="activity-item" id="solitaire-toggle" style="cursor: pointer;">
+                    🃏 Solitario (haz clic aquí para jugar)
+                </li>
+            </ul>
+
+            <div id="sudoku-game" style="display: none; margin-top: 30px;">
+                <div class="game-container">
+                    <div style="display: flex; justify-content: center; align-items: center; gap: 15px; margin-bottom: 20px;">
+                        <h3 style="font-family: 'Sniglet', cursive; color: var(--blue-dark); margin: 0;">Sudoku</h3>
+                        <button class="voice-btn" data-section="sudoku" style="width: 50px; height: 50px; font-size: 1.5rem;">🔊</button>
+                    </div>
+                    <div class="content-text" id="text-sudoku" style="font-size: 1.2rem; line-height: 1.8; color: var(--blue-dark); margin-bottom: 25px; text-align: justify;">
+                        Sudoku (Gimnasia Lógica): Trabaja principalmente el pensamiento estratégico, la lógica y la memoria de trabajo a corto plazo. Te obliga a mantener varios números en la mente mientras planeas tu siguiente movimiento.
+                    </div>
+                    <div id="sudoku-grid" style="display: grid; gap: 0; justify-content: center; margin-bottom: 20px;"></div>
+                    <div style="display: flex; gap: 10px; justify-content: center; margin-bottom: 20px;">
+                        <button id="sudoku-check" class="submit-btn" style="padding: 10px 20px; font-size: 1rem;">Verificar</button>
+                        <button id="sudoku-reset" class="submit-btn" style="padding: 10px 20px; font-size: 1rem;">Reiniciar</button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="word-search-game" style="display: none; margin-top: 30px;">
+                <div class="word-search-container">
+                    <div style="display: flex; justify-content: center; align-items: center; gap: 15px; margin-bottom: 20px;">
+                        <h3 style="font-family: 'Sniglet', cursive; color: var(--blue-dark); margin: 0;">Sopa de Letras</h3>
+                        <button class="voice-btn" data-section="word-search" style="width: 50px; height: 50px; font-size: 1.5rem;">🔊</button>
+                    </div>
+                    <div class="content-text" id="text-word-search" style="font-size: 1.2rem; line-height: 1.8; color: var(--blue-dark); margin-bottom: 25px; text-align: justify;">
+                        Sopa de Letras (Agudeza Visual): Ejercita la atención sostenida, la percepción espacial y la búsqueda visual. Ayuda a mantener el cerebro ágil para filtrar información irrelevante y enfocarse en objetivos específicos.
+                    </div>
+                    <h3 style="font-family: 'Sniglet', cursive; color: var(--blue-dark); margin-bottom: 20px; text-align: center;">Busca estas palabras:</h3>
+                    <div id="difficulty-buttons" style="display: flex; gap: 15px; justify-content: center; margin-bottom: 20px; flex-wrap: wrap;">
+                        <button class="difficulty-btn active" data-level="easy" style="padding: 15px 30px; font-size: 1.1rem; border-radius: 25px; border: 3px solid var(--blue-soft); background: var(--white); cursor: pointer; transition: all 0.3s; font-family: 'Comfortaa', cursive;">Fácil</button>
+                        <button class="difficulty-btn" data-level="medium" style="padding: 15px 30px; font-size: 1.1rem; border-radius: 25px; border: 3px solid var(--blue-soft); background: var(--white); cursor: pointer; transition: all 0.3s; font-family: 'Comfortaa', cursive;">Medio</button>
+                        <button class="difficulty-btn" data-level="hard" style="padding: 15px 30px; font-size: 1.1rem; border-radius: 25px; border: 3px solid var(--blue-soft); background: var(--white); cursor: pointer; transition: all 0.3s; font-family: 'Comfortaa', cursive;">Difícil</button>
+                    </div>
+                    <div id="word-list" style="display: flex; flex-wrap: wrap; gap: 15px; justify-content: center; margin-bottom: 20px;"></div>
+                    <div id="word-grid" style="display: grid; gap: 5px; justify-content: center; margin-bottom: 20px;"></div>
+                    <button id="reset-game" class="submit-btn" style="padding: 10px 30px; font-size: 1.1rem; display: block; margin: 0 auto;">Reiniciar juego</button>
+                </div>
+            </div>
+
+            <div id="crossword-game" style="display: none; margin-top: 30px;">
+                <div class="game-container">
+                    <div style="display: flex; justify-content: center; align-items: center; gap: 15px; margin-bottom: 20px;">
+                        <h3 style="font-family: 'Sniglet', cursive; color: var(--blue-dark); margin: 0;">Crucigrama</h3>
+                        <button class="voice-btn" data-section="crossword" style="width: 50px; height: 50px; font-size: 1.5rem;">🔊</button>
+                    </div>
+                    <div class="content-text" id="text-crossword" style="font-size: 1.2rem; line-height: 1.8; color: var(--blue-dark); margin-bottom: 25px; text-align: justify;">
+                        Los crucigramas son la herramienta más efectiva contra el deterioro cognitivo, ya que un estudio de la Universidad de Exeter demostró que su práctica regular mejora la función cerebral en un <span style="color: #1e3a5f; font-weight: bold; font-size: 1.3rem;">10%</span> en pruebas de memoria y atención. Al obligar al cerebro a buscar sinónimos, datos históricos y conexiones lingüísticas profundas, este juego estimula la memoria semántica y retrasa el envejecimiento mental. El impacto es tan potente que los entusiastas de los crucigramas muestran una agilidad mental equivalente a tener hasta 10 años menos que su edad biológica real.
+                    </div>
+                    <h3 style="font-family: 'Sniglet', cursive; color: var(--blue-dark); margin-bottom: 20px; text-align: center;">Crucigrama</h3>
+                    <div id="crossword-difficulty-buttons" style="display: flex; gap: 15px; justify-content: center; margin-bottom: 20px; flex-wrap: wrap;">
+                        <button class="crossword-difficulty-btn active" data-level="easy" style="padding: 15px 30px; font-size: 1.1rem; border-radius: 25px; border: 3px solid var(--blue-soft); background: var(--white); cursor: pointer; transition: all 0.3s; font-family: 'Comfortaa', cursive;">Fácil</button>
+                        <button class="crossword-difficulty-btn" data-level="medium" style="padding: 15px 30px; font-size: 1.1rem; border-radius: 25px; border: 3px solid var(--blue-soft); background: var(--white); cursor: pointer; transition: all 0.3s; font-family: 'Comfortaa', cursive;">Medio</button>
+                        <button class="crossword-difficulty-btn" data-level="hard" style="padding: 15px 30px; font-size: 1.1rem; border-radius: 25px; border: 3px solid var(--blue-soft); background: var(--white); cursor: pointer; transition: all 0.3s; font-family: 'Comfortaa', cursive;">Difícil</button>
+                    </div>
+                    <div id="crossword-grid" style="display: grid; gap: 3px; justify-content: center; margin-bottom: 20px;"></div>
+                    <div id="crossword-clues" style="margin-bottom: 20px;">
+                        <h4 style="font-family: 'Sniglet', cursive; color: var(--blue-dark); margin-bottom: 10px;">Pistas:</h4>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                            <div>
+                                <h5 style="color: var(--blue-medium);">Horizontales:</h5>
+                                <ul id="across-clues" style="list-style: none; padding: 0; font-size: 1.1rem;"></ul>
+                            </div>
+                            <div>
+                                <h5 style="color: var(--blue-medium);">Verticales:</h5>
+                                <ul id="down-clues" style="list-style: none; padding: 0; font-size: 1.1rem;"></ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="display: flex; gap: 10px; justify-content: center;">
+                        <button id="crossword-check" class="submit-btn" style="padding: 10px 20px; font-size: 1rem;">Verificar</button>
+                        <button id="crossword-reset" class="submit-btn" style="padding: 10px 20px; font-size: 1rem;">Reiniciar</button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="solitaire-game" style="display: none; margin-top: 30px;">
+                <div class="game-container">
+                    <div style="display: flex; justify-content: center; align-items: center; gap: 15px; margin-bottom: 20px;">
+                        <h3 style="font-family: 'Sniglet', cursive; color: var(--blue-dark); margin: 0;">Solitario Klondike</h3>
+                        <button class="voice-btn" data-section="solitaire" style="width: 50px; height: 50px; font-size: 1.5rem;">🔊</button>
+                    </div>
+                    <div class="content-text" id="text-solitaire" style="font-size: 1.2rem; line-height: 1.8; color: var(--blue-dark); margin-bottom: 25px; text-align: justify;">
+                        Solitario (Planificación): Este juego de cartas estimula la función ejecutiva y la memoria de trabajo. Tienes que recordar qué cartas ya salieron, planificar secuencias y tomar decisiones basadas en probabilidades.
+                    </div>
+                    <h3 style="font-family: 'Sniglet', cursive; color: var(--blue-dark); margin-bottom: 20px; text-align: center;">Solitario Klondike</h3>
+                    <div id="solitaire-board" style="display: flex; gap: 10px; justify-content: center; margin-bottom: 20px; min-height: 300px;"></div>
+                    <button id="solitaire-reset" class="submit-btn" style="padding: 10px 30px; font-size: 1.1rem; display: block; margin: 0 auto;">Reiniciar juego</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cámara de fondo para visión AR Passthrough -->
+    <video id="ar-video-background" autoplay playsinline muted style="display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; object-fit: cover; z-index: -1;"></video>
+
+    <!-- Botón flotante para salir de AR (se muestra solo cuando AR está activo) -->
+    <button id="exit-ar-btn" style="display: none; position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); z-index: 10000; background: #ef4444; color: white; border: none; padding: 15px 30px; font-family: 'Sniglet', cursive; font-size: 1.2rem; border-radius: 30px; cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.3);">
+      ❌ Salir de Vista Virtual
+    </button>
+
+    <!-- AR Scene (oculta por defecto hasta que se active) -->
+    <div id="ar-container" style="display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 9999;">
+        <a-scene 
+          id="ar-scene"
+          embedded
+          webxr="referenceSpaceType: local"
+          xr-mode-ui="enabled: false;"
+          loading-screen="enabled: false"
+          renderer="alpha: true; antialias: true;"
+          device-orientation-permission-ui="enabled: false">
+          
+          <!-- Camera Rig -->
+          <a-entity id="camera-rig">
+            <a-camera position="0 1.6 0" look-controls="enabled: true" wasd-controls="enabled: false"></a-camera>
+          </a-entity>
+
+          <!-- Memories Container -->
+          <a-entity id="memories-container" position="0 1.6 -2"></a-entity>
+
+          <!-- Lighting -->
+          <a-light type="ambient" color="#ffffff" intensity="0.8"></a-light>
+          <a-light type="directional" color="#ffffff" intensity="0.5" position="-1 1 1"></a-light>
+        </a-scene>
+    </div>
+
+    <script type="module" src="/src/aurasenior.js"></script>
+</body>
+</html>

@@ -1,0 +1,714 @@
+/* Diseño Accesible y Premium para Recuerdos AR (Azul y Blanco) */
+
+:root {
+  /* Paleta de Colores de Alto Contraste (Azul y Blanco) */
+  --primary-blue: #0A369D;      /* Azul Cobalto Intenso para textos principales y botones primarios */
+  --medium-blue: #1D5CFF;       /* Azul Intermedio para acentos e interacciones */
+  --light-blue-bg: #F0F5FF;     /* Fondo azul muy claro para descanso visual */
+  --card-blue: #E1ECFF;         /* Azul suave para paneles y tarjetas de información */
+  
+  --pure-white: #FFFFFF;        /* Blanco para fondos principales y contraste */
+  --text-dark: #0F172A;         /* Azul oscuro casi negro para máxima legibilidad de texto */
+  --text-muted: #475569;        /* Azul grisáceo para textos secundarios */
+  
+  --success-green: #15803D;     /* Verde de éxito para confirmaciones */
+  --danger-red: #BE123C;        /* Rojo para borrar o cancelar */
+  
+  --glass-bg: rgba(255, 255, 255, 0.90); /* Mayor opacidad para mejorar la lectura */
+  --glass-border: rgba(10, 54, 157, 0.15);
+  
+  --font-family: 'Outfit', sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: var(--font-family);
+}
+
+body, html {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background-color: var(--light-blue-bg);
+  color: var(--text-dark);
+}
+
+/* Evitar que el zoom nativo rompa el flujo pero mantener texto grande */
+body {
+  font-size: 18px; /* Tamaño base accesible */
+  line-height: 1.6;
+}
+
+/* Canvas de A-Frame debajo de la interfaz */
+.a-canvas {
+  z-index: 0 !important;
+}
+
+.a-enter-vr {
+  display: none !important;
+}
+
+/* Contenedor principal de la interfaz */
+.ui-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 10;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: radial-gradient(circle at center, rgba(240, 245, 255, 0.85) 0%, rgba(210, 225, 255, 0.95) 100%);
+  padding: 20px;
+  overflow-y: auto;
+  transition: opacity 0.5s ease, visibility 0.5s;
+}
+
+.ui-overlay:not(:has(.active)) {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+/* Ocultar pantallas inactivas */
+.ui-screen {
+  display: none;
+  flex-direction: column;
+  width: 100%;
+  max-width: 550px;
+  animation: slideUpFade 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.ui-screen.active {
+  display: flex;
+}
+
+/* Panel Estilo Premium (Glassmorphism con alto contraste) */
+.glass-panel {
+  background: var(--glass-bg);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 2px solid var(--glass-border);
+  border-radius: 28px;
+  padding: 36px 30px;
+  box-shadow: 0 10px 40px -10px rgba(10, 54, 157, 0.15),
+              0 20px 25px -5px rgba(0, 0, 0, 0.05);
+  text-align: center;
+}
+
+/* Títulos y Subtítulos */
+.title {
+  color: var(--primary-blue);
+  font-size: 2.2rem;
+  font-weight: 700;
+  margin-bottom: 12px;
+  line-height: 1.2;
+}
+
+.title-left {
+  text-align: left;
+  font-size: 1.8rem;
+  margin-bottom: 4px;
+}
+
+.subtitle {
+  color: var(--text-muted);
+  font-size: 1.15rem;
+  margin-bottom: 24px;
+  font-weight: 400;
+}
+
+.subtitle-left {
+  text-align: left;
+  margin-bottom: 16px;
+}
+
+.font-large {
+  font-size: 1.25rem;
+  line-height: 1.5;
+}
+
+/* Botones Accesibles (Grandes, fáciles de pulsar) */
+.button-group-vertical {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+  margin-top: 10px;
+}
+
+.primary-btn {
+  background-color: var(--primary-blue);
+  color: var(--pure-white);
+  border: 3px solid var(--primary-blue);
+  padding: 18px 28px;
+  font-size: 1.3rem;
+  font-weight: 600;
+  border-radius: 18px;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(10, 54, 157, 0.25);
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  width: 100%;
+}
+
+.primary-btn:hover {
+  background-color: var(--medium-blue);
+  border-color: var(--medium-blue);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(29, 92, 255, 0.35);
+}
+
+.primary-btn:active {
+  transform: translateY(1px);
+}
+
+.secondary-btn {
+  background-color: var(--pure-white);
+  color: var(--primary-blue);
+  border: 3px solid var(--primary-blue);
+  padding: 16px 28px;
+  font-size: 1.25rem;
+  font-weight: 600;
+  border-radius: 18px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  width: 100%;
+}
+
+.secondary-btn:hover {
+  background-color: var(--card-blue);
+  transform: translateY(-2px);
+}
+
+.secondary-btn:active {
+  transform: translateY(1px);
+}
+
+/* Botones de control */
+.back-btn {
+  background: none;
+  border: none;
+  color: var(--primary-blue);
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  align-self: flex-start;
+  margin-bottom: 20px;
+  padding: 8px 12px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  transition: background-color 0.2s;
+}
+
+.back-btn:hover {
+  background-color: var(--card-blue);
+}
+
+.logout-btn {
+  background-color: #F1F5F9;
+  border: 1px solid #CBD5E1;
+  color: var(--danger-red);
+  padding: 10px 18px;
+  font-size: 1rem;
+  font-weight: 600;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.logout-btn:hover {
+  background-color: #FFE4E6;
+  border-color: #FDA4AF;
+}
+
+/* Formularios Grandes */
+.form-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  text-align: left;
+  margin-top: 10px;
+}
+
+.input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  text-align: left;
+}
+
+.input-label {
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: var(--text-dark);
+}
+
+.text-input {
+  width: 100%;
+  padding: 16px 20px;
+  font-size: 1.2rem;
+  border: 2px solid #CBD5E1;
+  border-radius: 14px;
+  background-color: var(--pure-white);
+  color: var(--text-dark);
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.text-input:focus {
+  border-color: var(--primary-blue);
+  box-shadow: 0 0 0 4px rgba(29, 92, 255, 0.15);
+}
+
+.text-input-small {
+  padding: 12px 16px;
+  font-size: 1.1rem;
+}
+
+/* Pantalla de éxito de registro */
+.text-success {
+  color: var(--success-green);
+}
+
+.qr-result-container {
+  background-color: var(--card-blue);
+  border: 2px dashed var(--primary-blue);
+  border-radius: 20px;
+  padding: 24px;
+  margin: 20px 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+.qr-code-box {
+  background: white;
+  padding: 12px;
+  border-radius: 16px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.qr-code-box canvas, .qr-code-box img {
+  width: 180px !important;
+  height: 180px !important;
+}
+
+.qr-user-name {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--primary-blue);
+}
+
+/* Pantalla de Escaneo QR */
+.scanner-wrapper {
+  margin: 20px 0;
+  border-radius: 20px;
+  overflow: hidden;
+  border: 4px solid var(--primary-blue);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+  position: relative;
+  background: #000;
+}
+
+.qr-reader-view {
+  width: 100%;
+  aspect-ratio: 1; /* Cuadrado */
+  max-width: 320px;
+  margin: 0 auto;
+}
+
+/* Animación de línea de escaneo */
+.scanner-wrapper::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: var(--medium-blue);
+  box-shadow: 0 0 8px var(--medium-blue);
+  animation: scanLine 2.5s infinite linear;
+  pointer-events: none;
+  z-index: 5;
+}
+
+.scanner-status-text {
+  padding: 12px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: white;
+  background-color: rgba(15, 23, 42, 0.85);
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  text-align: center;
+  z-index: 6;
+}
+
+.scanner-instructions {
+  margin-top: 15px;
+  font-size: 1.05rem;
+  color: var(--text-muted);
+}
+
+/* Dashboard / Panel Principal */
+.dashboard-panel {
+  max-width: 750px; /* Panel más ancho para el contenido de galería */
+  padding: 30px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  max-height: 90vh;
+}
+
+.dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 2px solid var(--card-blue);
+  padding-bottom: 16px;
+}
+
+.dashboard-content {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  overflow-y: auto;
+  padding-right: 4px;
+  max-height: 48vh;
+  text-align: left;
+}
+
+/* Secciones de Dashboard */
+.dashboard-section {
+  background-color: var(--light-blue-bg);
+  border-radius: 20px;
+  padding: 20px;
+  border: 1px solid rgba(10, 54, 157, 0.08);
+}
+
+.section-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--primary-blue);
+  margin-bottom: 6px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.section-desc {
+  font-size: 1rem;
+  color: var(--text-muted);
+  margin-bottom: 16px;
+}
+
+/* Subida de Archivos */
+.upload-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.upload-file-container {
+  width: 100%;
+}
+
+.file-input-hidden {
+  display: none;
+}
+
+.file-selector-btn {
+  width: 100%;
+  background-color: var(--pure-white);
+  border: 2px dashed var(--primary-blue);
+  color: var(--primary-blue);
+  padding: 16px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  border-radius: 14px;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.file-selector-btn:hover {
+  background-color: var(--card-blue);
+}
+
+.file-selector-btn.file-selected {
+  background-color: #E2F0D9;
+  border-color: var(--success-green);
+  color: var(--success-green);
+}
+
+/* Galería de Recuerdos */
+.memories-gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+  gap: 14px;
+  margin-top: 10px;
+}
+
+.empty-gallery-msg {
+  grid-column: 1 / -1;
+  text-align: center;
+  color: var(--text-muted);
+  padding: 24px;
+  font-style: italic;
+  font-size: 1.05rem;
+}
+
+/* Tarjetas de Recuerdo */
+.memory-card {
+  background: var(--pure-white);
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.04);
+  border: 1px solid rgba(10, 54, 157, 0.1);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  aspect-ratio: 0.85;
+}
+
+.memory-card-img {
+  width: 100%;
+  height: 65%;
+  object-fit: cover;
+  background-color: #E2E8F0;
+}
+
+.memory-card-info {
+  padding: 8px 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  flex-grow: 1;
+}
+
+.memory-card-title {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text-dark);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.memory-card-date {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+.delete-memory-btn {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  background-color: rgba(255, 255, 255, 0.9);
+  border: none;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--danger-red);
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+  transition: background-color 0.2s, transform 0.2s;
+  font-size: 0.85rem;
+  z-index: 3;
+}
+
+.delete-memory-btn:hover {
+  background-color: var(--danger-red);
+  color: var(--pure-white);
+  transform: scale(1.1);
+}
+
+/* Área inferior con CTA para iniciar Realidad Virtual */
+.ar-action-container {
+  margin-top: 10px;
+  border-top: 2px solid var(--card-blue);
+  padding-top: 18px;
+}
+
+.btn-huge {
+  padding: 20px 30px;
+  font-size: 1.45rem;
+  border-radius: 22px;
+}
+
+.ar-help-text {
+  font-size: 0.95rem;
+  color: var(--text-muted);
+  margin-top: 8px;
+}
+
+/* Texto de ayuda general */
+.help-text {
+  font-size: 0.95rem;
+  color: var(--text-muted);
+  margin-top: 20px;
+}
+
+.mt-4 {
+  margin-top: 16px;
+}
+
+.width-100 {
+  width: 100%;
+}
+
+.brand-logo {
+  color: var(--primary-blue);
+  width: 60px;
+  height: 60px;
+  margin: 0 auto 16px auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.brand-logo svg {
+  width: 100%;
+  height: 100%;
+}
+
+/* Botón flotante para salir de realidad virtual */
+.exit-ar-btn {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  z-index: 1000;
+  background-color: var(--danger-red);
+  color: var(--pure-white);
+  border: none;
+  padding: 14px 22px;
+  font-size: 1.15rem;
+  font-weight: 700;
+  border-radius: 14px;
+  cursor: pointer;
+  box-shadow: 0 4px 15px rgba(190, 18, 62, 0.4);
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.exit-ar-btn:hover {
+  background-color: #9f1239;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(190, 18, 62, 0.6);
+}
+
+.hidden {
+  display: none !important;
+}
+
+/* Animaciones */
+@keyframes slideUpFade {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes scanLine {
+  0% {
+    top: 0;
+  }
+  50% {
+    top: 100%;
+  }
+  100% {
+    top: 0;
+  }
+}
+
+/* Ajustes responsivos móviles */
+@media (max-width: 480px) {
+  .glass-panel {
+    padding: 24px 18px;
+    border-radius: 20px;
+  }
+  
+  .title {
+    font-size: 1.8rem;
+  }
+  
+  .primary-btn {
+    font-size: 1.15rem;
+    padding: 14px 20px;
+  }
+  
+  .secondary-btn {
+    font-size: 1.1rem;
+    padding: 12px 20px;
+  }
+  
+  .btn-huge {
+    font-size: 1.25rem;
+    padding: 16px 20px;
+  }
+  
+  .dashboard-panel {
+    padding: 20px 14px;
+    max-height: 95vh;
+  }
+  
+  .dashboard-content {
+    max-height: 42vh;
+  }
+}
+
+/* Soporte para Cámara de fondo (Fondo AR Passthrough) */
+#ar-video-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  object-fit: cover;
+  z-index: -2; /* Detrás de la escena de A-Frame */
+  pointer-events: none;
+}
+
+body.ar-active {
+  background-color: transparent !important;
+}
+
+body.ar-active .ui-overlay {
+  background: transparent !important;
+  pointer-events: none;
+}
+
+a-scene {
+  background-color: transparent !important;
+}
+
