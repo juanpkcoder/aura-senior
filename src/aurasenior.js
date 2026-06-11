@@ -1161,6 +1161,109 @@ function playBubbleSound() {
         });
     }
 
+    // ---- Puzzle Logic ----
+    const puzzleToggle = document.getElementById('puzzle-toggle');
+    const puzzleGame = document.getElementById('puzzle-game');
+    const puzzleBoard = document.getElementById('puzzle-board');
+    const puzzleReset = document.getElementById('puzzle-reset');
+    
+    let puzzleTiles = [];
+    let selectedTile = null;
+
+    if (puzzleToggle && puzzleGame) {
+        puzzleToggle.addEventListener('click', () => {
+            if (puzzleGame.style.display === 'none') {
+                puzzleGame.style.display = 'block';
+                if (!puzzleBoard.children.length) initPuzzle();
+            } else {
+                puzzleGame.style.display = 'none';
+            }
+        });
+    }
+
+    function initPuzzle() {
+        if (!puzzleBoard) return;
+        puzzleBoard.innerHTML = '';
+        puzzleTiles = [0, 1, 2, 3, 4, 5, 6, 7, 8];
+        // Shuffle
+        for (let i = puzzleTiles.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [puzzleTiles[i], puzzleTiles[j]] = [puzzleTiles[j], puzzleTiles[i]];
+        }
+        renderPuzzle();
+    }
+
+    function renderPuzzle() {
+        puzzleBoard.innerHTML = '';
+        puzzleTiles.forEach((tileIndex, position) => {
+            const tile = document.createElement('div');
+            tile.style.width = '100%';
+            tile.style.height = '100%';
+            tile.style.backgroundImage = 'url("https://picsum.photos/300/300?random=1")';
+            tile.style.backgroundSize = '300px 300px';
+            const row = Math.floor(tileIndex / 3);
+            const col = tileIndex % 3;
+            tile.style.backgroundPosition = `-${col * 100}px -${row * 100}px`;
+            tile.style.cursor = 'pointer';
+            tile.style.transition = 'transform 0.2s';
+            tile.dataset.position = position;
+            
+            tile.addEventListener('click', () => handleTileClick(position, tile));
+            
+            if (selectedTile && selectedTile.dataset.position == position) {
+                tile.style.border = '3px solid var(--blue-dark)';
+                tile.style.transform = 'scale(0.95)';
+            } else {
+                tile.style.border = '1px solid #fff';
+            }
+            
+            puzzleBoard.appendChild(tile);
+        });
+        checkPuzzleWin();
+    }
+
+    function handleTileClick(position, tileElement) {
+        if (!selectedTile) {
+            selectedTile = tileElement;
+            renderPuzzle(); // to show selection
+        } else {
+            const pos1 = parseInt(selectedTile.dataset.position);
+            const pos2 = position;
+            if (pos1 !== pos2) {
+                // Swap
+                const temp = puzzleTiles[pos1];
+                puzzleTiles[pos1] = puzzleTiles[pos2];
+                puzzleTiles[pos2] = temp;
+            }
+            selectedTile = null;
+            renderPuzzle();
+        }
+    }
+
+    function checkPuzzleWin() {
+        if (puzzleTiles.length === 0) return;
+        let won = true;
+        for (let i = 0; i < puzzleTiles.length; i++) {
+            if (puzzleTiles[i] !== i) {
+                won = false;
+                break;
+            }
+        }
+        if (won) {
+            setTimeout(() => {
+                alert('¡Felicidades! Has completado el Rompecabezas 🎉');
+                celebrateGameCompletion('¡¡¡Felicidades!!! ¡Has completado el Rompecabezas! ¡Excelente trabajo!');
+            }, 300);
+        }
+    }
+
+    if (puzzleReset) {
+        puzzleReset.addEventListener('click', () => {
+            selectedTile = null;
+            initPuzzle();
+        });
+    }
+
     // ---- AR Logic ----
     const btnStartAR = document.getElementById('btn-start-ar');
     const exitArBtn = document.getElementById('exit-ar-btn');

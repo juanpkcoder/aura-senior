@@ -242,6 +242,9 @@
                 <li class="activity-item" id="solitaire-toggle" style="cursor: pointer;">
                     🃏 Solitario (haz clic aquí para jugar)
                 </li>
+                <li class="activity-item" id="puzzle-toggle" style="cursor: pointer;">
+                    🖼️ Rompecabezas (haz clic aquí para jugar)
+                </li>
             </ul>
 
             <div id="sudoku-game" style="display: none; margin-top: 30px;">
@@ -330,6 +333,25 @@
                     <h3 style="font-family: 'Sniglet', cursive; color: var(--blue-dark); margin-bottom: 20px; text-align: center;">Solitario Klondike</h3>
                     <div id="solitaire-board" style="display: flex; gap: 10px; justify-content: center; margin-bottom: 20px; min-height: 300px;"></div>
                     <button id="solitaire-reset" class="submit-btn" style="padding: 10px 30px; font-size: 1.1rem; display: block; margin: 0 auto;">Reiniciar juego</button>
+                </div>
+            </div>
+
+            <div id="puzzle-game" style="display: none; margin-top: 30px;">
+                <div class="game-container">
+                    <div style="display: flex; justify-content: center; align-items: center; gap: 15px; margin-bottom: 20px;">
+                        <h3 style="font-family: 'Sniglet', cursive; color: var(--blue-dark); margin: 0;">Rompecabezas</h3>
+                        <button class="voice-btn" data-section="puzzle" style="width: 50px; height: 50px; font-size: 1.5rem;">🔊</button>
+                    </div>
+                    <div class="content-text" id="text-puzzle" style="font-size: 1.2rem; line-height: 1.8; color: var(--blue-dark); margin-bottom: 25px; text-align: justify;">
+                        Rompecabezas (Percepción Espacial): Ayuda a ejercitar la percepción visual y la memoria a corto plazo, ensamblando las partes para formar una imagen completa. ¡Haz clic en dos piezas para intercambiarlas y resolver la imagen!
+                    </div>
+                    <div style="text-align: center; margin-bottom: 15px;">
+                        <!-- Using a generic placeholder image for the puzzle or one of the existing memory ones -->
+                        <img src="https://picsum.photos/300/300?random=1" id="puzzle-reference-img" style="max-width: 150px; border-radius: 10px; border: 2px solid var(--blue-soft);" alt="Objetivo">
+                        <p style="font-family: 'Comfortaa', cursive; color: var(--blue-medium);">Imagen a formar</p>
+                    </div>
+                    <div id="puzzle-board" style="display: grid; gap: 2px; justify-content: center; margin-bottom: 20px; background: #ccc; border: 2px solid var(--blue-dark); width: 300px; height: 300px; grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(3, 1fr); margin-left: auto; margin-right: auto;"></div>
+                    <button id="puzzle-reset" class="submit-btn" style="padding: 10px 30px; font-size: 1.1rem; display: block; margin: 0 auto;">Reiniciar juego</button>
                 </div>
             </div>
         </div>
