@@ -6,6 +6,8 @@ import {
   iniciarSesion,
   cerrarSesion,
   obtenerUsuarioActivo,
+  obtenerUsuarios,
+  agregarRecuerdoAlUsuarioActivo,
 } from './db.js';
 
 let currentSpeaking = null;
@@ -317,37 +319,13 @@ function playBubbleSound() {
             // Pasamos también el género
             const nuevoUsuario = registrarUsuario(nombre, '', edad, genero);
             if (nuevoUsuario) {
-                const regQrCodeContainer = document.getElementById('reg-qr-code');
                 const regUserInfo = document.getElementById('reg-user-info');
-                const btnDownloadQr = document.getElementById('btn-download-qr');
-                
-                regQrCodeContainer.innerHTML = '';
-                regUserInfo.textContent = `${nuevoUsuario.nombre}`;
+                if (regUserInfo) regUserInfo.textContent = `${nuevoUsuario.nombre}`;
 
-                QRCode.toDataURL(nuevoUsuario.id, {
-                    width: 300,
-                    margin: 4,
-                    color: { dark: '#000000', light: '#FFFFFF' },
-                    errorCorrectionLevel: 'H'
-                }).then(url => {
-                    const img = document.createElement('img');
-                    img.src = url;
-                    img.alt = `Código QR para ingresar de ${nuevoUsuario.nombre}`;
-                    regQrCodeContainer.appendChild(img);
+                registrationForm.style.display = 'none';
+                if (registrationSuccess) registrationSuccess.style.display = 'block';
 
-                    btnDownloadQr.onclick = () => {
-                        const link = document.createElement('a');
-                        link.download = `AuraSenior_QR_${nuevoUsuario.nombre}.png`;
-                        link.href = url;
-                        link.click();
-                    };
-
-                    registrationForm.style.display = 'none';
-                    registrationSuccess.style.display = 'block';
-                }).catch(err => {
-                    console.error(err);
-                    alert('Error al generar tu código QR, pero tu cuenta fue creada.');
-                });
+                iniciarSesion(nuevoUsuario.id);
             }
         });
     }
@@ -1192,14 +1170,19 @@ function playBubbleSound() {
     const landingPageUI = document.getElementById('landing-page');
     let cameraStream = null;
 
-    function renderDefaultMemories() {
+    function renderUserMemories() {
         const container = document.getElementById('memories-container');
         if (!container) return;
         container.innerHTML = '';
-        const recuerdos = [
-            { imagen: '/assets/memory1.png', titulo: 'Recuerdo Familiar' },
-            { imagen: '/assets/memory2.png', titulo: 'Viaje a la Playa' }
-        ];
+        const user = obtenerUsuarioActivo();
+        let recuerdos = user && user.recuerdos ? user.recuerdos : [];
+        
+        if (recuerdos.length === 0) {
+            recuerdos = [
+                { imagen: '/assets/memory1.png', titulo: 'Recuerdo Familiar' },
+                { imagen: '/assets/memory2.png', titulo: 'Viaje a la Playa' }
+            ];
+        }
 
         recuerdos.forEach((rec, index) => {
             const total = recuerdos.length;
@@ -1257,23 +1240,26 @@ function playBubbleSound() {
     // ---- Web-AR Login & Scanner Logic ----
     const arLoginView = document.getElementById('ar-login-view');
     const arStartView = document.getElementById('ar-start-view');
-    const btnStartScanner = document.getElementById('btn-start-scanner');
-    const btnCancelScanner = document.getElementById('btn-cancel-scanner');
-    const qrReaderContainer = document.getElementById('qr-reader-container');
-    const scannerStatus = document.getElementById('scanner-status');
     const arWelcomeMsg = document.getElementById('ar-welcome-msg');
     const btnLogoutAr = document.getElementById('btn-logout-ar');
-    let html5QrCode = null;
 
     function updateArTabUI() {
-        const user = obtenerUsuarioActivo();
-        if (user) {
-            arLoginView.style.display = 'none';
-            arStartView.style.display = 'block';
+        let user = obtenerUsuarioActivo();
+        if (!user) {
+            const usuarios = obtenerUsuarios();
+            if (usuarios.length > 0) {
+                user = usuarios[usuarios.length - 1];
+                iniciarSesion(user.id);
+            }
+        }
+
+        if (arLoginView) arLoginView.style.display = 'none';
+        if (arStartView) arStartView.style.display = 'block';
+
+        if (user && arWelcomeMsg) {
             arWelcomeMsg.textContent = `¡Bienvenido, ${user.nombre}!`;
-        } else {
-            arStartView.style.display = 'none';
-            arLoginView.style.display = 'block';
+        } else if (arWelcomeMsg) {
+            arWelcomeMsg.textContent = `¡Bienvenido!`;
         }
     }
 
@@ -1284,58 +1270,28 @@ function playBubbleSound() {
         });
     }
 
-    if (btnStartScanner) {
-        btnStartScanner.addEventListener('click', () => {
-            qrReaderContainer.style.display = 'block';
-            btnStartScanner.style.display = 'none';
-            scannerStatus.textContent = "Buscando cámara...";
-            scannerStatus.style.color = "var(--blue-dark)";
+    const btnAddMemory = document.getElementById('btn-add-memory');
+    if (btnAddMemory) {
+        btnAddMemory.addEventListener('click', () => {
+            const titleInput = document.getElementById('memory-title');
+            const imageInput = document.getElementById('memory-image');
+            const titulo = titleInput.value;
+            const file = imageInput.files[0];
             
-            html5QrCode = new Html5Qrcode("qr-reader");
-            html5QrCode.start(
-                { facingMode: "environment" },
-                { fps: 10, qrbox: { width: 250, height: 250 } },
-                (qrMessage) => {
-                    const user = iniciarSesion(qrMessage);
-                    if (user) {
-                        scannerStatus.textContent = `¡Código reconocido! Bienvenido ${user.nombre}...`;
-                        scannerStatus.style.color = '#4ade80';
-                        html5QrCode.stop().then(() => {
-                            html5QrCode = null;
-                            qrReaderContainer.style.display = 'none';
-                            btnStartScanner.style.display = 'inline-block';
-                            updateArTabUI();
-                        });
-                    } else {
-                        scannerStatus.textContent = "Código no válido.";
-                        scannerStatus.style.color = '#ef4444';
-                        setTimeout(() => {
-                            scannerStatus.textContent = "Centra tu código QR frente a la cámara.";
-                            scannerStatus.style.color = "var(--blue-dark)";
-                        }, 2000);
-                    }
-                },
-                (errorMessage) => { }
-            ).catch(err => {
-                scannerStatus.textContent = "No se pudo iniciar la cámara trasera.";
-                // Fallback a camara frontal/default
-                html5QrCode.start({ videoConstraints: {} }, { fps: 10, qrbox: { width: 250, height: 250 } })
-                    .catch(e => {
-                        scannerStatus.textContent = "Error al iniciar cámara. Permite el acceso a la cámara.";
-                    });
-            });
-        });
-    }
-
-    if (btnCancelScanner) {
-        btnCancelScanner.addEventListener('click', () => {
-            if (html5QrCode && html5QrCode.isScanning) {
-                html5QrCode.stop().then(() => {
-                    html5QrCode = null;
-                });
+            if (!titulo || !file) {
+                alert('Por favor ingresa un título y selecciona una imagen.');
+                return;
             }
-            qrReaderContainer.style.display = 'none';
-            btnStartScanner.style.display = 'inline-block';
+            
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const base64Image = e.target.result;
+                agregarRecuerdoAlUsuarioActivo(base64Image, titulo);
+                alert('¡Recuerdo guardado con éxito!');
+                titleInput.value = '';
+                imageInput.value = '';
+            };
+            reader.readAsDataURL(file);
         });
     }
 
@@ -1389,7 +1345,7 @@ function playBubbleSound() {
                 landingPageUI.style.display = 'none';
                 arContainer.style.display = 'block';
                 exitArBtn.style.display = 'block';
-                renderDefaultMemories();
+                renderUserMemories();
                 
                 // Disparar redimensionamiento para A-Frame
                 window.dispatchEvent(new Event('resize'));

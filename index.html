@@ -104,10 +104,8 @@
 
             <div id="registration-success" style="display: none; text-align: center; margin-top: 20px;">
                 <h3 style="color: #4ade80; font-family: 'Sniglet', cursive; margin-bottom: 15px;">¡Registro Exitoso!</h3>
-                <p class="content-text">Este es tu Código QR. Guárdalo, imprímelo o tómale una foto. Lo necesitarás para entrar a la sección de Realidad Aumentada.</p>
-                <div id="reg-qr-code" style="margin: 20px auto; display: inline-block; padding: 15px; background: white; border-radius: 10px; border: 3px solid var(--blue-soft);"></div>
+                <p class="content-text">Ya puedes acceder a la pestaña de Web-AR para ver tus recuerdos en Realidad Aumentada.</p>
                 <h4 id="reg-user-info" style="color: var(--blue-dark); margin-bottom: 20px; font-family: 'Comfortaa', cursive;"></h4>
-                <button id="btn-download-qr" class="submit-btn" style="padding: 10px 20px; font-size: 1rem;">Guardar Imagen</button>
                 <button id="btn-reset-registro" class="submit-btn" style="padding: 10px 20px; font-size: 1rem; margin-left: 10px; background: var(--blue-soft); color: var(--blue-dark);">Registrar otra persona</button>
             </div>
         </div>
@@ -191,20 +189,7 @@
                 <button class="voice-btn" data-section="webar">🔊</button>
             </div>
             
-            <div id="ar-login-view">
-                <div class="content-text" id="text-webar" style="margin-bottom: 20px;">
-                    Para ver tus recuerdos personalizados en Realidad Aumentada, escanea tu Código QR. Si no tienes uno, ve a la pestaña "Registro" para crearlo.
-                </div>
-                <div style="text-align: center; margin-bottom: 20px;">
-                    <button id="btn-start-scanner" class="submit-btn" style="padding: 15px 30px; font-size: 1.2rem;">
-                        📷 Escanear mi Código QR
-                    </button>
-                </div>
-                <div id="qr-reader-container" style="display: none; max-width: 400px; margin: 0 auto; border: 3px solid var(--blue-soft); border-radius: 15px; overflow: hidden; padding: 10px; background: white;">
-                    <div id="qr-reader"></div>
-                    <div id="scanner-status" style="text-align: center; margin-top: 10px; font-weight: bold; color: var(--blue-dark);">Buscando cámara...</div>
-                    <button id="btn-cancel-scanner" class="submit-btn" style="width: 100%; margin-top: 10px; background: #ef4444; padding: 10px;">Cancelar Escaneo</button>
-                </div>
+            <div id="ar-login-view" style="display: none;">
             </div>
 
             <div id="ar-start-view" style="display: none;">
@@ -219,8 +204,14 @@
                         Ver en Realidad Aumentada
                     </button>
                 </div>
-                <div style="text-align: center; margin-top: 20px;">
-                    <button id="btn-logout-ar" class="submit-btn" style="background: var(--blue-soft); color: var(--blue-dark); padding: 10px 20px; font-size: 1rem;">Cerrar Sesión QR</button>
+
+                <div id="add-memory-section" style="margin-top: 30px; text-align: center; border-top: 2px dashed var(--blue-soft); padding-top: 20px;">
+                    <h4 style="color: var(--blue-dark); font-family: 'Sniglet', cursive; margin-bottom: 15px;">Añadir Nuevo Recuerdo</h4>
+                    <div style="display: flex; flex-direction: column; gap: 10px; max-width: 300px; margin: 0 auto;">
+                        <input type="text" id="memory-title" placeholder="Título del recuerdo" style="padding: 10px; border-radius: 10px; border: 1px solid #ccc; font-family: 'Comfortaa', cursive;">
+                        <input type="file" id="memory-image" accept="image/*" style="font-family: 'Comfortaa', cursive;">
+                        <button id="btn-add-memory" class="submit-btn" style="padding: 10px; font-size: 1rem; background: var(--blue-pastel); color: var(--blue-dark);">Guardar Recuerdo</button>
+                    </div>
                 </div>
             </div>
         </div>
